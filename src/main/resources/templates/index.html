@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script th:src="@{js/jquery-3.1.1.min.js}"></script>
+</head>
+<body>
+Hello spring boot;
+<input name="username" type="text" />
+<input name="password" type="password" />
+<button onclick="test()">测试</button>
+<script>
+    function test(){
+        var params = {"username":$("[name=username]").val(),"password":$("[name=password]").val()};
+        $.post("/saveAdmin",params,function(data){
+            console.log(data);
+        });
+    }
+
+</script>
+</body>
+</html>

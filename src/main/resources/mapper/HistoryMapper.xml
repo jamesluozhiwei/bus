@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whx.bus.mapper.HistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.whx.bus.entity.History" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="busId" property="busid" jdbcType="INTEGER" />
+    <result column="wayId" property="wayid" jdbcType="INTEGER" />
+    <result column="driverId" property="driverid" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="tgo" property="tgo" jdbcType="TIMESTAMP" />
+    <result column="tend" property="tend" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, busId, wayId, driverId, state, tgo, tend
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whx.bus.entity.HistoryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whx.bus.entity.HistoryExample" >
+    delete from history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whx.bus.entity.History" >
+    insert into history (id, busId, wayId, 
+      driverId, state, tgo, 
+      tend)
+    values (#{id,jdbcType=INTEGER}, #{busid,jdbcType=INTEGER}, #{wayid,jdbcType=INTEGER}, 
+      #{driverid,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{tgo,jdbcType=TIMESTAMP}, 
+      #{tend,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whx.bus.entity.History" >
+    insert into history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="busid != null" >
+        busId,
+      </if>
+      <if test="wayid != null" >
+        wayId,
+      </if>
+      <if test="driverid != null" >
+        driverId,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="tgo != null" >
+        tgo,
+      </if>
+      <if test="tend != null" >
+        tend,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="busid != null" >
+        #{busid,jdbcType=INTEGER},
+      </if>
+      <if test="wayid != null" >
+        #{wayid,jdbcType=INTEGER},
+      </if>
+      <if test="driverid != null" >
+        #{driverid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="tgo != null" >
+        #{tgo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tend != null" >
+        #{tend,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whx.bus.entity.HistoryExample" resultType="java.lang.Integer" >
+    select count(*) from history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update history
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.busid != null" >
+        busId = #{record.busid,jdbcType=INTEGER},
+      </if>
+      <if test="record.wayid != null" >
+        wayId = #{record.wayid,jdbcType=INTEGER},
+      </if>
+      <if test="record.driverid != null" >
+        driverId = #{record.driverid,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null" >
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.tgo != null" >
+        tgo = #{record.tgo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.tend != null" >
+        tend = #{record.tend,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update history
+    set id = #{record.id,jdbcType=INTEGER},
+      busId = #{record.busid,jdbcType=INTEGER},
+      wayId = #{record.wayid,jdbcType=INTEGER},
+      driverId = #{record.driverid,jdbcType=INTEGER},
+      state = #{record.state,jdbcType=INTEGER},
+      tgo = #{record.tgo,jdbcType=TIMESTAMP},
+      tend = #{record.tend,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whx.bus.entity.History" >
+    update history
+    <set >
+      <if test="busid != null" >
+        busId = #{busid,jdbcType=INTEGER},
+      </if>
+      <if test="wayid != null" >
+        wayId = #{wayid,jdbcType=INTEGER},
+      </if>
+      <if test="driverid != null" >
+        driverId = #{driverid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="tgo != null" >
+        tgo = #{tgo,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tend != null" >
+        tend = #{tend,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whx.bus.entity.History" >
+    update history
+    set busId = #{busid,jdbcType=INTEGER},
+      wayId = #{wayid,jdbcType=INTEGER},
+      driverId = #{driverid,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      tgo = #{tgo,jdbcType=TIMESTAMP},
+      tend = #{tend,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

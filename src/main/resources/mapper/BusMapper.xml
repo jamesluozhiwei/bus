@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.whx.bus.mapper.BusMapper" >
+  <resultMap id="BaseResultMap" type="com.whx.bus.entity.Bus" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="card" property="card" jdbcType="VARCHAR" />
+    <result column="driverId" property="driverid" jdbcType="INTEGER" />
+    <result column="wayId" property="wayid" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="topen" property="topen" jdbcType="TIMESTAMP" />
+    <result column="tclose" property="tclose" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, card, driverId, wayId, price, topen, tclose
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whx.bus.entity.BusExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bus
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bus
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.whx.bus.entity.BusExample" >
+    delete from bus
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.whx.bus.entity.Bus" >
+    insert into bus (id, card, driverId, 
+      wayId, price, topen, 
+      tclose)
+    values (#{id,jdbcType=INTEGER}, #{card,jdbcType=VARCHAR}, #{driverid,jdbcType=INTEGER}, 
+      #{wayid,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{topen,jdbcType=TIMESTAMP}, 
+      #{tclose,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.whx.bus.entity.Bus" >
+    insert into bus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="card != null" >
+        card,
+      </if>
+      <if test="driverid != null" >
+        driverId,
+      </if>
+      <if test="wayid != null" >
+        wayId,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="topen != null" >
+        topen,
+      </if>
+      <if test="tclose != null" >
+        tclose,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="card != null" >
+        #{card,jdbcType=VARCHAR},
+      </if>
+      <if test="driverid != null" >
+        #{driverid,jdbcType=INTEGER},
+      </if>
+      <if test="wayid != null" >
+        #{wayid,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="topen != null" >
+        #{topen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tclose != null" >
+        #{tclose,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.whx.bus.entity.BusExample" resultType="java.lang.Integer" >
+    select count(*) from bus
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update bus
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.card != null" >
+        card = #{record.card,jdbcType=VARCHAR},
+      </if>
+      <if test="record.driverid != null" >
+        driverId = #{record.driverid,jdbcType=INTEGER},
+      </if>
+      <if test="record.wayid != null" >
+        wayId = #{record.wayid,jdbcType=INTEGER},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.topen != null" >
+        topen = #{record.topen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.tclose != null" >
+        tclose = #{record.tclose,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update bus
+    set id = #{record.id,jdbcType=INTEGER},
+      card = #{record.card,jdbcType=VARCHAR},
+      driverId = #{record.driverid,jdbcType=INTEGER},
+      wayId = #{record.wayid,jdbcType=INTEGER},
+      price = #{record.price,jdbcType=DOUBLE},
+      topen = #{record.topen,jdbcType=TIMESTAMP},
+      tclose = #{record.tclose,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.whx.bus.entity.Bus" >
+    update bus
+    <set >
+      <if test="card != null" >
+        card = #{card,jdbcType=VARCHAR},
+      </if>
+      <if test="driverid != null" >
+        driverId = #{driverid,jdbcType=INTEGER},
+      </if>
+      <if test="wayid != null" >
+        wayId = #{wayid,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="topen != null" >
+        topen = #{topen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tclose != null" >
+        tclose = #{tclose,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.whx.bus.entity.Bus" >
+    update bus
+    set card = #{card,jdbcType=VARCHAR},
+      driverId = #{driverid,jdbcType=INTEGER},
+      wayId = #{wayid,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      topen = #{topen,jdbcType=TIMESTAMP},
+      tclose = #{tclose,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
