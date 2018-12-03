@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::commonHead('公交管理系统')">
 </head>
 <body>
-欢迎进入管理员页面
+    <!-- 导入头部 -->
+    <div id="header" th:include="common/nav::header"></div>
+    <aside id="menu" th:include="common/nav::menu"></aside>
 </body>
 </html>

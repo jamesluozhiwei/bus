@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::commonHead('公交管理系统')">
+</head>
+<body>
+    <!-- 导入头部 -->
+    <div id="header" th:include="common/nav::header"></div>
+    <!-- 导入左部菜单导航栏 -->
+    <aside id="menu" th:include="common/nav::menu"></aside>
+    <!-- 主题内容开始 -->
+    <!-- 搜索条件 -->
+    <div class="content">
+        <div class="content-panel">
+            <div class="row">
+                <form id="form_condition">
+                    <div class="col-lg-6 form-group">
+                        <label>姓名</label>
+                        <input type="text" name="name" class="form-control"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>驾驶证编号</label>
+                        <input type="text" name="driverCard" class="form-control"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>性别</label>
+                        <select name="sex" class="form-control">
+                            <option value="">全部</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>手机号</label>
+                        <input type="text" name="mobile" class="form-control"/>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>状态</label>
+                        <select name="state" class="form-control">
+                            <option value="">全部</option>
+                            <option value="0">就职状态</option>
+                            <option value="-1">离职状态</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 form-group text-right">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-success" type="button" onclick="">添加</button>
+                        <button class="btn btn-success" type="button" onclick="datatableInitial()">查询</button>
+                        <button class="btn btn-success" type="reset" >重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 数据表格展示区 -->
+    <div class="content">
+        <div class="content-panel">
+            <div class="row">
+                <table class="table table-bordered table-hover" id="driverListTable"></table>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="root" value="${#httpServletRequest.getContextPath()}" />
+    <script>
+        var oTable;
+        var root = $("#root").val();
+        $(function () {
+            datatableInitial();
+        });
+        /**
+         * 构建datatable
+         */
+        function datatableInitial(){
+            if (typeof oTable == "undefined"){
+                oTable = $("#driverListTable").dataTable({
+                    "bPaginate":true,//翻页功能
+                    "sServerMethod":"POST",//请求方式
+                    "bServerSide":true,//是否开启服务端分页
+                    "bProcessing":true,//是否显示加载ing
+                    "bFilter":false,//是否开启过滤
+                    "bSort":false,//是否开启排序
+                    "sAjaxSource":root+"/admin/driver",
+                    "fnServerParams":function (aoData) {//查询条件，额外参数
+                        var $form = $("#form_condition");
+                        aoData.push({
+                                "name":"name",
+                                "value":$form.find("[name=name]").val()
+                        });
+                        aoData.push({
+                            "name":"driverCard",
+                            "value":$form.find("[name=driverCard]").val()
+                        });
+                        aoData.push({
+                            "name":"sex",
+                            "value":$form.find("[name=sex]").val()
+                        });
+                        aoData.push({
+                            "name":"mobile",
+                            "value":$form.find("[name=mobile]").val()
+                        });
+                        aoData.push({
+                            "name":"state",
+                            "value":$form.find("[name=state]").val()
+                        });
+                    },
+                    "aoColumns":[{
+                        "mData":"id",
+                        "sTitle":"司机编号",
+                        "visible":false
+                    },{
+                        "mData":"name",
+                        "sTitle":"姓名"
+                    },{
+                        "mData":"driverCard",
+                        "sTitle":"驾驶证编号"
+                    },{
+                        "mData":"sex",
+                        "sTitle":"性别"
+                    },{
+                        "mData":"age",
+                        "sTitle":"年龄"
+                    },{
+                        "mData":"mobile",
+                        "sTitle":"手机"
+                    },{
+                        "mData":"state",
+                        "sTitle":"状态",
+                        "mRender":function (data,type,full) {
+                            return data == 0?"就职状态":"离职状态";
+                        }
+                    },{
+                        "mData":"id",
+                        "sTitle":"操作",
+                        "mRender":function (data,type,full) {
+                            var str = "";
+                            str += "<button type='button' onclick='modifyDriver("+full+")' class='btn btn-primary'><i class='fa fa-pencil' aria-hidden='true'></i>编辑</button>";
+                            str += "<button type='button' onclick='deleteDriver("+full+")' class='btn btn-primary'><i class='fa fa-trash' aria-hidden='true'></i>删除</button>";
+                            return str;
+                        }
+                    }],
+                    language: {
+                        "sProcessing": "处理中...",
+                        "sLengthMenu": "显示 _MENU_ 项结果",
+                        "sZeroRecords": "没有匹配结果",
+                        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                        "sInfoPostFix": "",
+                        "sSearch": "搜索:",
+                        "sUrl": "",
+                        "sEmptyTable": "表中数据为空",
+                        "sLoadingRecords": "载入中...",
+                        "sInfoThousands": ",",
+                        "oPaginate": {
+                            "sFirst": "首页",
+                            "sPrevious": "上页",
+                            "sNext": "下页",
+                            "sLast": "末页"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": 以升序排列此列",
+                            "sSortDescending": ": 以降序排列此列"
+                        }
+                    }
+                });
+            } else{
+                // oTable.fnClearTable(0);
+                var oSettings = oTable.fnSettings();
+                oSettings._iDisplayLength = parseInt($(
+                    '[name=driverListTable_length] option:selected').val());
+                $('.dataTables_length select').val(
+                    $('[name=driverListTable_length] option:selected').val());
+                oSettings._iDisplayStart = 0;
+                oTable.fnDraw();//重绘表格
+            }
+        }
+
+        /**
+         * 编辑司机信息
+         */
+        function modifyDriver(obj) {
+            console.log(obj)
+        }
+
+        /**
+         * 删除司机信息
+         * @param obj
+         */
+        function deleteDriver(obj){
+            console.log(obj);
+        }
+
+    </script>
+</body>
+</html>

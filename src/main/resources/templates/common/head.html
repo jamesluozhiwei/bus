@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment = "commonHead(title)">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title th:text="${title}">Title</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/vendor/bootstrap/dist/css/bootstrap.min.css'}" rel="stylesheet" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/vendor/sweetalert/lib/sweetalert.css'}" rel="stylesheet" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/vendor/toastr/build/toastr.min.css'}" rel="stylesheet" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/vendor/metisMenu/dist/metisMenu.min.css'}" rel="stylesheet" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/vendor/fontawesome/css/font-awesome.css'}" rel="stylesheet" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/css/style.css'}" rel="stylesheet" />
+    <link th:href="@{${#httpServletRequest.getContextPath()}+'/vendor/bootstrap-3.3.7-dist/datatables_plugins/integration/bootstrap/3/dataTables.bootstrap.css'}" rel="stylesheet" />
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/js/jquery-3.1.1.min.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/bootstrap/dist/js/bootstrap.min.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/sweetalert/lib/sweetalert-dev.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/toastr/build/toastr.min.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/metisMenu/dist/metisMenu.min.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/js/common.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/bootstrap-3.3.7-dist/datatables_plugins/jquery.dataTables.min.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/jquery-validation/jquery.validate.min.js'}"></script>
+    <script th:src="@{${#httpServletRequest.getContextPath()}+'/vendor/bootstrap-3.3.7-dist/datatables_plugins/integration/bootstrap/3/dataTables.bootstrap.min.js'}"></script>
+</head>

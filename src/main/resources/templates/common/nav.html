@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 顶部导航 -->
+<div id="header" th:fragment="header">
+    <div class="color-line">
+    </div>
+    <div id="logo" class="light-version">
+        <span>
+          	 商城后台
+        </span>
+    </div>
+    <nav role="navigation">
+        <div class="header-link hide-menu"><i class="fa fa-bars"></i></div>
+        <div class="navbar-right">
+            <ul class="nav navbar-nav no-borders">
+                <li class="dropdown" style="padding: 0 10px;height: 56px;overflow-y: hidden;">
+                    <a th:href="@{${#httpServletRequest.getContextPath()}+'/logout'}">
+                        <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<!-- 左部导航 -->
+<aside id="menu" th:fragment="menu">
+    <div id="navigation">
+        <div class="profile-picture">
+            <a href="#">
+                <img style="width: 150px" src="" class="img-circle m-b" alt="logo">
+            </a>
+        </div>
+        <ul class="nav" id="side-menu">
+            <li id="leftMenuProduct">
+                <a href="#"><span class="nav-label">商品管理</span><span class="fa arrow"></span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="">商品分类管理</a></li>
+                    <li><a href="">商品管理</a></li>
+                    <li><a href="">Option管理</a></li>
+                </ul>
+            </li>
+            <li id="leftMenuOrder">
+                <a href="#"><span class="nav-label">订单管理</span><span class="fa arrow"></span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="">查看订单</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href=""><span class="nav-label">用户管理</span></a>
+            </li>
+            <li>
+                <a href=""><span class="nav-label">评论管理</span></a>
+            </li>
+            <li id="leftMenuArticle">
+                <a href="#"><span class="nav-label">文章管理</span><span class="fa arrow"></span> </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="">分类管理</a></li>
+                    <li><a href="">文章管理</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href=""><span class="nav-label">广告管理</span></a>
+            </li>
+            <li>
+                <a href=""><span class="nav-label">电子钱包初始金额设定</span></a>
+            </li>
+        </ul>
+    </div>
+</aside>
+</body>
+</html>

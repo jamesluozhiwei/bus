@@ -17,7 +17,7 @@
     <form class="form-signin" method="post" action="login">
         <h2 class="form-signin-heading text-center">公交管理系统登录</h2>
         <div class="alert alert-success" role="alert" th:if="${logout != null}" th:text="${logout}"></div>
-        <div class="alert alert-warning" role="alert" th:if="${error != null}" th:text="${error}"></div>
+        <div class="alert alert-danger" role="alert" th:if="${error != null}" th:text="${error}"></div>
         <p>
             <label for="username" class="sr-only">用户名</label>
             <input type="text" id="username" name="username" class="form-control" placeholder="Username" required=""
