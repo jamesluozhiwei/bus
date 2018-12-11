@@ -1,5 +1,6 @@
 package com.whx.bus.mapper;
 
+import com.whx.bus.entity.Station;
 import com.whx.bus.entity.Way;
 import com.whx.bus.entity.WayExample;
 import org.apache.ibatis.annotations.Mapper;
@@ -30,4 +31,11 @@ public interface WayMapper {
     int updateByPrimaryKeySelective(Way record);
 
     int updateByPrimaryKey(Way record);
+
+    /**
+     * 通过路线获取站点信息
+     * @param id
+     * @return
+     */
+    List<Station> selectStationsByWay(Integer id);
 }

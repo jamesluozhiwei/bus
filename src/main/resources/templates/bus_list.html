@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::commonHead('公交管理系统')">
+</head>
+<body>
+    <!-- 导入头部 -->
+    <div id="header" th:include="common/nav::header"></div>
+    <!-- 导入左部菜单导航栏 -->
+    <aside id="menu" th:include="common/nav::menu"></aside>
+    <!-- 主体内容开始 -->
+    <div class="content">
+        <div class="content-panel">
+            <div class="row text-right">
+                <a type="button" class="btn btn-success" th:href="${#httpServletRequest.getContextPath()+'/admin/bus/edit'}">新增公交</a>
+            </div>
+        </div>
+    </div>
+    <!-- 数据表格展示区、路线管理使用客户端分页处理 -->
+    <div class="content">
+        <div class="content-panel">
+            <div class="row">
+                <table class="table table-bordered table-hover" id="infoTable"></table>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="root" th:value="${#httpServletRequest.getContextPath()}" />
+    <script>
+        //设置当前菜单高亮
+        //$("#leftMenuBus").addClass("active");
+        var root = $("#root").val();
+        var oTable;
+        $(function () {
+            initialDataTable();
+        });
+        //初始化datatable
+        function initialDataTable() {
+            $.ajax({
+                url:root+"/admin/bus/datatable",
+                method:"post",
+                dataType:"json",
+                async:true,
+                data:{},
+                success:function (data) {
+                    //初始化datatable
+                    if (typeof oTable != "undefined"){
+                        //如果已经被实例化，则销毁再实例化
+                        oTable.fnDestroy();
+                    }
+                    oTable = $("#infoTable").dataTable({
+                        "bPaginate":true,//翻页功能
+                        "sServerMethod":"POST",//请求方式
+                        "bServerSide":false,//是否开启服务端分页
+                        "bProcessing":true,//是否显示加载ing
+                        "bFilter":false,//是否开启过滤
+                        "bSort":true,//是否开启排序
+                        "searching":true,//是否开启搜索功能
+                        "data":data.buses,
+                        "aoColumns":[
+                            {
+                                "mData":"id",
+                                "sTitle":"序号",
+                                "width":"50px",
+                                "mRender":function (d,type,full,meta) {
+                                    return meta.row+1+meta.settings._iDisplayStart;
+                                }
+                            },
+                            {
+                                "mData":"card",
+                                "sTitle":"车牌号"
+                            },
+                            {
+                                "mData":"driver",
+                                "sTitle":"司机",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){
+                                        return "暂无";
+                                    } else{
+                                        return d.name;
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"driver",
+                                "sTitle":"司机电话",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){
+                                        return "暂无";
+                                    } else{
+                                        return d.mobile;
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"price",
+                                "sTitle":"价格",
+                                "mRender":function (d,type,full,meta) {
+                                    return "￥"+d;
+                                }
+                            },
+                            {
+                                "mData":"way",
+                                "sTitle":"路线",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){
+                                        return "暂无";
+                                    } else{
+                                        return d.name;
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"way",
+                                "sTitle":"站点数量",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){//如果路线为空
+                                        return "暂无";
+                                    }
+                                    //若果不为空
+                                    return d.stations.length;
+                                }
+                            },
+                            {
+                                "mData":"way",
+                                "sTitle":"始发站",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){//如果路线为空
+                                        return "暂无";
+                                    }
+                                    //若果不为空
+                                    if (d.stations.length > 0){
+                                        return d.stations[0].name;
+                                    } else{
+                                        return "还没有添加始站点信息";
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"way",
+                                "sTitle":"终点站",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){//如果路线为空
+                                        return "暂无";
+                                    }
+                                    //若果不为空
+                                    if (d.stations.length > 0){
+                                        return d.stations[d.stations.length-1].name;
+                                    } else{
+                                        return "还没有添加站点信息";
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"way",
+                                "sTitle":"首班车",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){
+                                        return "暂无";
+                                    } else{
+                                        return d.topenString;
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"way",
+                                "sTitle":"末班车",
+                                "mRender":function (d,type,full,meta) {
+                                    if (d == null){
+                                        return "暂无";
+                                    } else{
+                                        return d.tcloseString;
+                                    }
+                                }
+                            },
+                            {
+                                "mData":"id",
+                                "sTitle":"操作",
+                                "width":"180px",
+                                "mRender":function (d,type,full,meta) {
+                                    var str = "";
+                                    str = '<a class="btn btn-primary" href="'+root+'/admin/bus/edit/'+d+'"><i class=\'fa fa-pencil\' aria-hidden=\'true\'></i>编辑</a>'
+                                    str += '<button class="btn btn-primary" style="margin-left: 10px;" onclick=\'deleteObj('+JSON.stringify(full)+')\'><i class=\'fa fa-trash\' aria-hidden=\'true\'></i>删除</button>';
+                                    return str;
+                                }
+                            }
+                        ]
+                    });
+                }
+            });
+        }
+        //删除路线
+        function deleteObj(obj) {
+            swal({
+                title:"您确定删除当前公交吗？",
+                text:"谨慎操作！公交信息删除后将无法撤回！",
+                type:"warning",
+                showCancelButton:true,
+                confirmButtonText:"确定删除",
+                confirmButtonColor:"#F27474",
+                closeOnConfirm:false,
+                cancelButtonText:"取消",
+                showLoaderOnConfirm:true
+            },function () {
+                $.ajax({
+                    url: root + "/admin/bus/delete",
+                    method: "post",
+                    dataType: "json",
+                    data: {"id": obj.id},
+                    async: true,
+                    success: function (data) {
+                        if (data.code > 0) {
+                            //swal("删除成功！","","success");
+                            swal({
+                                title: "删除成功！",
+                                text: "",
+                                type: "success"
+                            });
+                            //成功之后重新获取列表
+                            initialDataTable();
+                        } else {
+                            //swal("删除失败！",data.msg,"error");
+                            swal({
+                                title: "删除失败！",
+                                text: data.msg,
+                                type: "error"
+                            });
+                        }
+                    }
+                })
+            });
+        }
+    </script>
+</body>
+</html>

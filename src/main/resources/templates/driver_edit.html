@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::commonHead('公交管理系统')">
+</head>
+<body>
+    <!-- 导入头部 -->
+    <div id="header" th:include="common/nav::header"></div>
+    <!-- 导入左部菜单导航栏 -->
+    <aside id="menu" th:include="common/nav::menu"></aside>
+    <!-- 主体内容开始 -->
+    <div class="content">
+        <div class="content-panel">
+            <form id="form_info" method="post" th:object="${targetUser}" action="#">
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label>司机姓名</label>
+                        <input type="text" class="form-control" name="name" th:field="*{name}" />
+                        <input type="hidden" name="id" th:field="*{id}" />
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>驾驶证编号</label>
+                        <input type="text" class="form-control" name="driverCard" th:field="*{driverCard}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label>性别</label>
+                        <select name="sex" class="form-control" th:field="*{sex}">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>年龄</label>
+                        <input type="text" class="form-control" name="age" th:field="*{age}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label>手机</label>
+                        <input type="text" class="form-control" name="mobile" th:field="*{mobile}" />
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>状态</label>
+                        <select name="state" class="form-control" th:field="*{state}">
+                            <option value="0">就职状态</option>
+                            <option value="-1">离职状态</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <button type="button" class="btn btn-success" onclick="saveDriver();"><i aria-hidden="true" class="fa fa-check"></i>保存</button>
+                        <button type="button" class="btn btn-success" onclick="window.history.back()"><i aria-hidden="true" class="fa fa-chevron-circle-left"></i>返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <input type="hidden" id="root" th:value="${#httpServletRequest.getContextPath()}">
+    <script>
+        var validate;
+        var root = $("#root").val();
+        $(function () {
+            validate = $("#form_info").validate({
+               onsubmit:false,//是否提交表单时触发验证
+               onclick:false,//是否点击时验证
+               onkeyup:false,//是否键起时验证
+               onfocusout:false,//是否失去焦点时验证
+               focusInvalid:false,//验证未通过的控件是否自动获得焦点
+               focusCleanup:true,//控件获得焦点时是否清除错误提示，避免和focusInvalid一起使用
+               errorClass:"error",//错误提示样式
+               rules:{//规则
+                   name:{
+                       required:true,
+                       maxlength:6
+                   },
+                   driverCard:{
+                       required:true
+                   },
+                   age:{
+                       required:true,
+                       digits:true,
+                       range:[18,50]
+                   },
+                   mobile:{
+                       required:true,
+                       isMobile:true
+                   }
+               }
+            });
+        })
+        /**
+         * 保存司机
+         */
+        function saveDriver(){
+            //效验数据格式
+            if (!$("#form_info").valid()){
+                return;
+            }
+            var params = $("#form_info").serialize();
+            //发送请求保存
+            $.ajax({
+                url:root+"/admin/driver/save",
+                method:"post",
+                dataType:"json",
+                async:false,
+                data:params,
+                success:function (data) {
+                    if (data.code  == 1){
+                        toastr.success("提示：保存成功！");
+                        //将返回的id设置到表单中
+                        $("[name=id]").val(data.data.id);
+                    }else{
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

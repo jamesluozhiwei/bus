@@ -17,6 +17,10 @@ public class Bus {
 
     private Date tclose;
 
+    private Driver driver;
+
+    private Way way;
+
     public Integer getId() {
         return id;
     }
@@ -71,5 +75,21 @@ public class Bus {
 
     public void setTclose(Date tclose) {
         this.tclose = tclose;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    public Way getWay() {
+        return way;
+    }
+
+    public void setWay(Way way) {
+        this.way = way;
     }
 }

@@ -5,6 +5,8 @@ import com.whx.bus.mapper.AdminMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 管理员业务接口实现类
  */
@@ -25,5 +27,10 @@ public class AdminServiceImpl implements AdminService{
             num = this.adminMapper.updateByPrimaryKeySelective(admin);
         }
         return num;
+    }
+
+    @Override
+    public List<Admin> getAdmins() {
+        return this.adminMapper.selectByExample(null);
     }
 }

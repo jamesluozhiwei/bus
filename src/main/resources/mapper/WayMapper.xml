@@ -6,6 +6,14 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="topen" property="topen" jdbcType="TIMESTAMP" />
     <result column="tclose" property="tclose" jdbcType="TIMESTAMP" />
+    <result column="topenString" property="topenString" jdbcType="VARCHAR" />
+    <result column="tcloseString" property="tcloseString" jdbcType="VARCHAR" />
+    <collection property="stations" ofType="com.whx.bus.entity.Station" column="id" javaType="java.util.ArrayList" select="selectStationsByWay">
+    </collection>
+  </resultMap>
+  <resultMap id="StationResultMap" type="com.whx.bus.entity.Station" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, name, topen, tclose
+    id, name, topen, tclose,tcloseString,topenString
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.whx.bus.entity.WayExample" >
     select
@@ -98,13 +106,13 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.whx.bus.entity.Way" >
+  <insert id="insert" parameterType="com.whx.bus.entity.Way" useGeneratedKeys="true" keyProperty="id" >
     insert into way (id, name, topen, 
-      tclose)
+      tclose,tcloseString,topenString)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{topen,jdbcType=TIMESTAMP}, 
-      #{tclose,jdbcType=TIMESTAMP})
+      #{tclose,jdbcType=TIMESTAMP}, #{topenString,jdbcType=VARCHAR}, #{tcloseString,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.whx.bus.entity.Way" >
+  <insert id="insertSelective" parameterType="com.whx.bus.entity.Way" useGeneratedKeys="true" keyProperty="id" >
     insert into way
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -117,6 +125,12 @@
         topen,
       </if>
       <if test="tclose != null" >
+        tclose,
+      </if>
+      <if test="topenString != null" >
+        topen,
+      </if>
+      <if test="tcloseString != null" >
         tclose,
       </if>
     </trim>
@@ -132,6 +146,12 @@
       </if>
       <if test="tclose != null" >
         #{tclose,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topenString != null" >
+        #{topenString,jdbcType=VARCHAR},
+      </if>
+      <if test="tcloseString != null" >
+        #{tcloseString,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -155,6 +175,12 @@
       </if>
       <if test="record.tclose != null" >
         tclose = #{record.tclose,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.topenString != null" >
+        topenString = #{record.topenString,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tcloseString != null" >
+        tcloseString = #{record.tcloseString,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -183,6 +209,12 @@
       <if test="tclose != null" >
         tclose = #{tclose,jdbcType=TIMESTAMP},
       </if>
+      <if test="topenString != null" >
+        topenString = #{topenString,jdbcType=VARCHAR},
+      </if>
+      <if test="tcloseString != null" >
+        tcloseString = #{tcloseString,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -193,4 +225,8 @@
       tclose = #{tclose,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 通过路线获取站点信息 -->
+  <select id="selectStationsByWay" parameterType="java.lang.Integer" resultMap="StationResultMap">
+    select station.* from station inner join way_station on station.id = way_station.stationId where way_station.wayId = #{value}
+  </select>
 </mapper>

@@ -9,6 +9,33 @@
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="topen" property="topen" jdbcType="TIMESTAMP" />
     <result column="tclose" property="tclose" jdbcType="TIMESTAMP" />
+    <association property="driver" column="driverId" javaType="com.whx.bus.entity.Driver" select="selectDriverById">
+    </association>
+    <association property="way" column="wayId" javaType="com.whx.bus.entity.Way" select="selectWayById">
+    </association>
+  </resultMap>
+  <!-- 司机结果集 -->
+  <resultMap id="DriverResultMap" type="com.whx.bus.entity.Driver">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="driver_card" property="driverCard" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 路线结果集 -->
+  <resultMap id="WayResultMap" type="com.whx.bus.entity.Way">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="topen" property="topen" jdbcType="TIMESTAMP" />
+    <result column="tclose" property="tclose" jdbcType="TIMESTAMP" />
+    <result column="topenString" property="topenString" jdbcType="VARCHAR" />
+    <result column="tcloseString" property="tcloseString" jdbcType="VARCHAR" />
+    <collection property="stations" ofType="com.whx.bus.entity.Station" column="id" javaType="java.util.ArrayList" select="selectStationsByWay">
+    </collection>
+  </resultMap>
+  <!-- 站点结果集 -->
+  <resultMap id="StationResultMap" type="com.whx.bus.entity.Station" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -240,4 +267,16 @@
       tclose = #{tclose,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 通过路线获取站点信息 -->
+  <select id="selectStationsByWay" parameterType="java.lang.Integer" resultMap="StationResultMap">
+    select station.* from station inner join way_station on station.id = way_station.stationId where way_station.wayId = #{value}
+  </select>
+  <!-- 通过司机id查询司机信息 -->
+  <select id="selectDriverById" parameterType="java.lang.Integer" resultMap="DriverResultMap">
+    select driver.* from driver where id = #{value}
+  </select>
+  <!-- 通过路线id查询路线信息 -->
+  <select id="selectWayById" parameterType="java.lang.Integer" resultMap="WayResultMap">
+    select way.* from way where id = #{value}
+  </select>
 </mapper>

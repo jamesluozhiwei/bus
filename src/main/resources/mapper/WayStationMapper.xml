@@ -178,4 +178,20 @@
       wayId = #{wayid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!-- 批量新增站点与路线绑定信息 -->
+  <insert id="insertWayStations" parameterType="com.whx.bus.entity.Way">
+    insert into way_station
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      stationId,
+      wayId
+    </trim>
+    values
+    <foreach collection="stations" item="station" separator="," index="index">
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        #{station.id,jdbcType=INTEGER},
+        #{id,jdbcType=INTEGER}
+      </trim>
+    </foreach>
+  </insert>
+
 </mapper>

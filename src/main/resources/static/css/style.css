@@ -1,5 +1,6 @@
 body {
     background-color: #f1f3f6;
+    overflow: hidden;
 }
 
 #header {
@@ -154,4 +155,53 @@ body {
 }
 #side-menu li.active {
     background: #fff;
+}
+form>select,
+form>input,
+form>textarea {
+    margin-bottom:8px;
+}
+
+input.err,
+input.error,
+textarea.err,
+textarea.error,
+select.err,
+select.error {
+    border:#bf6464 2px dashed !important;
+    background-color:#fdfbfb !important;
+
+    -webkit-transition: all 0.2s ease-in;
+    -moz-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+
+
+/*
+	Form Validation
+*/
+form.validate label.error {
+    position:absolute;
+    background-color:#ff0000;
+    color:#fff;
+    left:0;
+    z-index:10;
+    bottom:-26px;
+    left:36px;
+    font-size:11px;
+    font-weight:400;
+    padding:3px;
+
+    display:none !important;
+}
+.error{
+    color:#bf6464;
+}
+
+.table td{
+    vertical-align: middle !important;
+}
+.table{
+    width:100% !important;
 }

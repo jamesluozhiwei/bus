@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,16 +35,18 @@ public class AdminController {
         Map<String,Object> map = new HashMap<>();
         //调用service保存
         try {
-            admin.setRole("ADMIN");
+            admin.setRole("ROLE_ADMIN");
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             admin.setPassword(encoder.encode(admin.getPassword()));
             int num = this.adminService.saveAdmin(admin);
             map.put("code",num);
             map.put("admin ",admin);
+            map.put("msg ",num>1?"保存成功！":"保存失败！");
         }catch (Exception e){
             e.printStackTrace();
             map.put("code",-1);
             map.put("admin ",null);
+            map.put("msg ","保存失败!");
         }
         return map;
     }
@@ -58,5 +61,25 @@ public class AdminController {
         modelAndView.setViewName("adminList");
         return modelAndView;
     }
-
+    /**
+     * 使用datatable客户端分页获取管理员集数据用
+     * @return
+     */
+    @RequestMapping(value="/datatable",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> getAdminsByDatatable(){
+        Map<String,Object> map = new HashMap<>();
+        try {
+            List<Admin> admins = this.adminService.getAdmins();
+            map.put("code",1);
+            map.put("msg","获取数据成功！");
+            map.put("admins",admins);
+        }catch (Exception e){
+            e.printStackTrace();
+            map.put("code",-1);
+            map.put("msg","获取数据失败！");
+            map.put("admins",null);
+        }
+        return map;
+    }
 }

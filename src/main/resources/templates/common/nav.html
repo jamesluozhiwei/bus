@@ -11,7 +11,7 @@
     </div>
     <div id="logo" class="light-version">
         <span>
-          	 商城后台
+          	 王大亨公交管理系统
         </span>
     </div>
     <nav role="navigation">
@@ -37,38 +37,21 @@
             </a>
         </div>
         <ul class="nav" id="side-menu">
-            <li id="leftMenuProduct">
-                <a href="#"><span class="nav-label">商品管理</span><span class="fa arrow"></span> </a>
+            <li id="leftMenuAdmin">
+                <a th:href="${#httpServletRequest.getContextPath()+'/admin/adminList'}"><i aria-hidden="true" class="fa fa-users">&nbsp;</i><span class="nav-label">管理员管理</span></a>
+            </li>
+            <li id="leftMenuDriver">
+                <a th:href="${#httpServletRequest.getContextPath()+'/admin/driver/list'}"><i aria-hidden="true" class="fa fa-user">&nbsp;</i><span class="nav-label">司机管理</span></a>
+            </li>
+            <li id="leftMenuBus">
+                <a th:href="${#httpServletRequest.getContextPath()+'/admin/bus/list'}"><i aria-hidden="true" class="fa fa-bus">&nbsp;</i><span class="nav-label">公交管理</span></a>
+            </li>
+            <li id="leftMenuWay">
+                <a href="#"><span class="nav-label"><i class="fa fa-road" aria-hidden="true"></i>路线管理</span><span class="fa arrow"></span> </a>
                 <ul class="nav nav-second-level">
-                    <li><a href="">商品分类管理</a></li>
-                    <li><a href="">商品管理</a></li>
-                    <li><a href="">Option管理</a></li>
+                    <li><a th:href="${#httpServletRequest.getContextPath()+'/admin/station'}"><i class="fa fa-ticket" aria-hidden="true"></i>站点管理</a></li>
+                    <li><a th:href="${#httpServletRequest.getContextPath()+'/admin/way'}"><i class="fa fa-road" aria-hidden="true"></i>路线管理</a></li>
                 </ul>
-            </li>
-            <li id="leftMenuOrder">
-                <a href="#"><span class="nav-label">订单管理</span><span class="fa arrow"></span> </a>
-                <ul class="nav nav-second-level">
-                    <li><a href="">查看订单</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href=""><span class="nav-label">用户管理</span></a>
-            </li>
-            <li>
-                <a href=""><span class="nav-label">评论管理</span></a>
-            </li>
-            <li id="leftMenuArticle">
-                <a href="#"><span class="nav-label">文章管理</span><span class="fa arrow"></span> </a>
-                <ul class="nav nav-second-level">
-                    <li><a href="">分类管理</a></li>
-                    <li><a href="">文章管理</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href=""><span class="nav-label">广告管理</span></a>
-            </li>
-            <li>
-                <a href=""><span class="nav-label">电子钱包初始金额设定</span></a>
             </li>
         </ul>
     </div>

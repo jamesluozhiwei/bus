@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::commonHead('公交管理系统')">
+</head>
+<body>
+<!-- 导入头部 -->
+<div id="header" th:include="common/nav::header"></div>
+<!-- 导入左部菜单导航栏 -->
+<aside id="menu" th:include="common/nav::menu"></aside>
+<!-- 主体内容开始 -->
+<div class="content">
+    <div class="content-panel">
+        <form id="form_info" method="post" th:object="${bus}" action="#">
+            <div class="row">
+                <div class="col-lg-6 form-group">
+                    <label>车牌号</label>
+                    <input type="text" class="form-control" name="card" th:field="*{card}" />
+                    <input type="hidden" name="id" th:field="*{id}" />
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label>司机</label>
+                    <select name="driverid" class="form-control" th:field="*{driverid}">
+                        <option value="0">暂无</option>
+                        <option th:each="driver : ${drivers}" th:value="${driver.id}" th:text="${driver.name}">James</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 form-group">
+                    <label>路线</label>
+                    <select name="wayid" class="form-control" th:field="*{wayid}">
+                        <option value="0">暂无</option>
+                        <option th:each="way : ${ways}" th:value="${way.id}" th:text="${way.name}">长株潭101</option>
+                    </select>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label>价格</label>
+                    <input type="number" class="form-control" name="price" th:field="*{price}" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 form-group">
+                    <button type="button" class="btn btn-success" onclick="saveBus();"><i aria-hidden="true" class="fa fa-check"></i>保存</button>
+                    <button type="button" class="btn btn-success" onclick="window.history.back()"><i aria-hidden="true" class="fa fa-chevron-circle-left"></i>返回</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<input type="hidden" id="root" th:value="${#httpServletRequest.getContextPath()}">
+<script>
+    var validate;
+    var root = $("#root").val();
+    $(function () {
+        validate = $("#form_info").validate({
+            onsubmit:false,//是否提交表单时触发验证
+            onclick:false,//是否点击时验证
+            onkeyup:false,//是否键起时验证
+            onfocusout:false,//是否失去焦点时验证
+            focusInvalid:false,//验证未通过的控件是否自动获得焦点
+            focusCleanup:true,//控件获得焦点时是否清除错误提示，避免和focusInvalid一起使用
+            errorClass:"error",//错误提示样式
+            rules:{//规则
+                card:{
+                    required:true
+                },
+                price:{
+                    required:true,
+                    range:[1,10]
+                }
+            }
+        });
+    })
+    /**
+     * 保存公交
+     */
+    function saveBus(){
+        //效验数据格式
+        if (!$("#form_info").valid()){
+            return;
+        }
+        var params = $("#form_info").serialize();
+        //发送请求保存
+        $.ajax({
+            url:root+"/admin/bus/save",
+            method:"post",
+            dataType:"json",
+            async:false,
+            data:params,
+            success:function (data) {
+                if (data.code  == 1){
+                    toastr.success("提示：保存成功！");
+                    //将返回的id设置到表单中
+                    $("[name=id]").val(data.data.id);
+                }else{
+                    toastr.warning(data.msg);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

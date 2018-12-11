@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::commonHead('公交管理系统')">
+</head>
+<body>
+    <!-- 导入头部 -->
+    <div id="header" th:include="common/nav::header"></div>
+    <!-- 导入左部菜单导航栏 -->
+    <aside id="menu" th:include="common/nav::menu"></aside>
+    <!-- 页面主题内容 -->
+    <div class="content">
+        <div class="content-panel">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#wayInfo" aria-controls="wayInfo" role="tab" data-toggle="tab">路线信息</a>
+                </li>
+                <li role="presentation">
+                    <a href="#stationsInfo" aria-controls="stationsInfo" role="tab" data-toggle="tab">站点信息</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="wayInfo">
+                    <form id="form_info" method="post" action="#" th:object="${way}">
+                        <div class="row">
+                            <div class="col-lg-6 form-group">
+                                <label>路线名称</label>
+                                <input type="text" name="name" th:field="*{name}" class="form-control" />
+                                <input type="hidden" id="wayId" name="id" th:field="*{id}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 form-group">
+                                <label>首班车发车时间</label>
+                                <input type="text" name="topen" th:field="*{topenString}" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 form-group">
+                                <label>末班车发车时间</label>
+                                <input type="text" name="tclose" th:field="*{tcloseString}" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-success" onclick="saveBasic();"><i aria-hidden="true" class="fa fa-check"></i>保存</button>
+                                <button type="button" class="btn btn-success" onclick="window.history.back()"><i aria-hidden="true" class="fa fa-chevron-circle-left"></i>返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="stationsInfo">
+                    <form id="form_stations" method="post" action="#" >
+                        <h4>站点列表</h4>
+                        <div class="row item" th:each="station,iterStat : ${stations}">
+                            <div class="col-lg-6 form-group">
+                                <input type="text" name="name" onchange="nameChange(event)"  th:value="${station.name}"  class="form-control stationName" />
+                                <input type="hidden" name="id" th:value="${station.id}" />
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <button type="button" class="btn btn-primary" onclick="addDom(this)"><i class="fa fa-add"></i>添加一行</button>
+                                <button type="button" class="btn btn-primary"  onclick="removeDom(this)" style="margin-left: 10px;"><i class="fa fa-reduce"></i>删除该行</button>
+                            </div>
+                        </div>
+                        <div class="row item" th:if="${way.stations.size() == 0}">
+                            <div class="col-lg-6 form-group">
+                                <input type="text" name="name" onchange="nameChange(event)" class="form-control stationName" />
+                                <input type="hidden" name="id"  />
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <button type="button" class="btn btn-primary" onclick="addDom(this)"><i class="fa fa-add"></i>添加一行</button>
+                                <button type="button" class="btn btn-primary" onclick="removeDom(this)"style="margin-left: 10px;"><i class="fa fa-reduce"></i>删除该行</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-success" onclick="saveStations();"><i aria-hidden="true" class="fa fa-check"></i>保存站点信息</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="root" th:value="${#httpServletRequest.getContextPath()}" />
+    <script>
+        //设置当前菜单高亮
+        $("#leftMenuWay").addClass("active");
+        var root = $("#root").val();
+        $(function () {
+
+        });
+
+        /*$(document).on("change",'.stationName',function (e) {
+            $.ajax({
+                url:root+"/admin/station/info/name",
+                method:"post",
+                dataType:"json",
+                data:{"name":e.target.value},
+                async:true,
+                success:function (data) {
+                    if (data.code > 0){
+                        //若存在
+                        $(e.target).siblings("[name=id]").val(data.data.id);
+                        $(e.target).removeClass("error");
+                    }else{
+                        $(e.target).addClass("error");
+                    }
+                }
+            });
+        });*/
+        //定义一个函数，所有站点下的站点名称控件绑定改变事件，当值改变时，重新获取当前站点信息
+        function nameChange(e) {
+            //改变之后向清空id
+            $(e.target).siblings("[name=id]").val("");
+            $.ajax({
+                url:root+"/admin/station/info/name",
+                method:"post",
+                dataType:"json",
+                data:{"name":e.target.value},
+                async:true,
+                success:function (data) {
+                    if (data.code > 0){
+                        //若存在
+                        $(e.target).siblings("[name=id]").val(data.data.id);
+                        $(e.target).removeClass("error");
+                    }else{
+                        $(e.target).addClass("error");
+                    }
+                }
+            });
+        }
+        //保存路线基本信息
+        function saveBasic() {
+            if($("#form_info [name=name]").val() == ""){
+                toastr.warning("请输入路线名称！");
+                return;
+            }
+            //获取表单数据
+            var params = $("#form_info").serialize();
+            $.ajax({
+                url:root+"/admin/way/save/basic",
+                method:"post",
+                dataType:"json",
+                data:params,
+                async:false,
+                success:function (data) {
+                    if (data.code > 0){
+                        toastr.success("提示：保存成功！");
+                        $("#wayId").val(data.data.id);
+                    } else{
+                        toastr.warning(data.msg);
+                    }
+                }
+            });
+        }
+        //保存站点信息
+        function saveStations() {
+            //先判断是否已经保存过路线信息
+            if ($("#wayId").val() == ""){
+                toastr.warning("请先保存路线基本信息！");
+                return;
+            }
+            //若已经保存，则获取所有站点信息进行封装
+            var $form = $("#form_stations");
+            var $rows = $form.find(".item");
+            var way = {};
+            var stations = new Array();
+            for (var i = 0; i < $rows.length;i++){
+                var station = {};
+                var $row = $rows.eq(i);
+                if ($row.find("[name=name]").val() == "" && $row.find("[name=id]").val() == ""){
+                    //若两个都为空，则跳过当前行
+                    continue;
+                }
+                if ($row.find("[name=name]").val() == "" || $row.find("[name=id]").val() == ""){
+                    //请核对站点信息
+                    toastr.warning("请核对站点信息！");
+                    return;
+                }
+                //若没有错则添加到站点信息集中
+                station["id"] = $row.find("[name=id]").val();
+                station["name"] = $row.find("[name=name]").val();
+                //加入到数组中
+                stations.push(station);
+                console.log(i);
+            }
+            way["id"] = $("#wayId").val();
+            way["stations"] = stations;
+            //发送请求
+            $.ajax({
+               url:root+"/admin/way/save/stations",
+               method:"post",
+               dataType:"json",
+               contentType:"application/json;charset=utf-8",
+               data:JSON.stringify(way),
+               async:false,
+               success:function (data) {
+                   if (data.code > 0){
+                       toastr.success("提示：保存成功！");
+                   } else{
+                       toastr.warning("提示："+data.msg);
+                   }
+               }
+            });
+        }
+
+        //新增站点节点
+        function addDom(dom){
+            //向当前节点下方新增站点DOM节点
+            var str = '<div class="row item">\n' +
+                '                            <div class="col-lg-6 form-group">\n' +
+                '                                <input type="text"  name="name" onchange="nameChange(event)" class="form-control stationName" />\n' +
+                '                                <input type="hidden" name="id"  />\n' +
+                '                            </div>\n' +
+                '                            <div class="col-lg-6 form-group">\n' +
+                '                                <button type="button" class="btn btn-primary" onclick="addDom(this)"><i class="fa fa-add"></i>添加一行</button>\n' +
+                '                                <button type="button" class="btn btn-primary"  onclick="removeDom(this)" style="margin-left: 10px;"><i class="fa fa-add"></i>删除该行</button>\n' +
+                '                            </div>\n' +
+                '                        </div>';
+            $(dom).parents(".item").after(str);
+        }
+
+        //删除站点节点
+        function removeDom(dom) {
+            $(dom).parents(".item").remove();
+        }
+
+    </script>
+</body>
+</html>

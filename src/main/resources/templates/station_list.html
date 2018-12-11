@@ -5,16 +5,17 @@
 <body>
     <!-- 导入头部 -->
     <div id="header" th:include="common/nav::header"></div>
+    <!-- 导入左部菜单导航栏 -->
     <aside id="menu" th:include="common/nav::menu"></aside>
     <!-- 主体内容开始 -->
     <div class="content">
         <div class="content-panel">
             <div class="row text-right">
-                <button type="button" class="btn btn-success" onclick="showModal()">新增管理员</button>
+                <button type="button" class="btn btn-success" onclick="addStation()">新增站点</button>
             </div>
         </div>
     </div>
-    <!-- 数据表格展示区、路线管理使用客户端分页处理 -->
+    <!-- 数据表格展示区、站点管理使用客户端分页处理 -->
     <div class="content">
         <div class="content-panel">
             <div class="row">
@@ -22,25 +23,24 @@
             </div>
         </div>
     </div>
-    <!-- 新增管理员模态框 -->
+    <!-- 站点信息模态框 -->
     <div class="modal fade" id="modal_info">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" type="button" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">管理员信息</h4>
+                    <h4 class="modal-title">站点信息</h4>
                 </div>
                 <div class="modal-body">
                     <form id="form_info" method="post" action="#">
                         <div class="row">
                             <div class="col-lg-6 form-group">
-                                <label>管理员名称</label>
-                                <input type="text" name="username" class="form-control" />
-                                <input type="hidden" name="id" />
+                                <label>站点编号</label>
+                                <input type="text" name="id" class="form-control" disabled />
                             </div>
                             <div class="col-lg-6 form-group">
-                                <label>管理员密码</label>
-                                <input type="password" name="password" class="form-control" />
+                                <label>站点名称</label>
+                                <input type="text" name="name" class="form-control" />
                             </div>
                         </div>
                     </form>
@@ -54,17 +54,16 @@
     </div>
     <input type="hidden" id="root" th:value="${#httpServletRequest.getContextPath()}" />
     <script>
-        //设置当前菜单高亮
-        //$("#leftMenuAdmin").addClass("active");
-        var root = $("#root").val();
+        $("#leftMenuWay").addClass("active");//设置当前菜单高亮
         var oTable;
+        var root = $("#root").val();
         $(function () {
             initialDataTable();
         });
         //初始化datatable
         function initialDataTable() {
             $.ajax({
-                url:root+"/admin/datatable",
+                url:root+"/admin/station/datatable",
                 method:"post",
                 dataType:"json",
                 async:true,
@@ -83,7 +82,7 @@
                         "bFilter":false,//是否开启过滤
                         "bSort":true,//是否开启排序
                         "searching":true,//是否开启搜索功能
-                        "data":data.admins,
+                        "data":data.stations,
                         "aoColumns":[
                             {
                                 "mData":"id",
@@ -94,32 +93,102 @@
                                 }
                             },
                             {
-                                "mData":"username",
-                                "sTitle":"管理员"
+                                "mData":"name",
+                                "sTitle":"站点名称"
+                            },
+                            {
+                                "mData":"id",
+                                "sTitle":"操作",
+                                "width":"180px",
+                                "mRender":function (d,type,full,meta) {
+                                    var str = "";
+                                    str = '<button class="btn btn-primary" onclick=\'modifyObj('+JSON.stringify(full)+')\'><i class=\'fa fa-pencil\' aria-hidden=\'true\'></i>编辑</button>'
+                                    str += '<button class="btn btn-primary" style="margin-left: 10px;" onclick=\'deleteObj('+JSON.stringify(full)+')\'><i class=\'fa fa-trash\' aria-hidden=\'true\'></i>删除</button>';
+                                    return str;
+                                }
                             }
                         ]
                     });
                 }
             });
         }
+
+        //编辑站点
+        function modifyObj(obj) {
+            //点编辑、将当前信息设置奥模态框中，并弹出
+            var $form = $("#form_info");
+            $form.find("[name=id]").val(obj.id);
+            $form.find("[name=name]").val(obj.name);
+            //弹出模态框
+            $("#modal_info").modal("show");
+        }
+
+        //删除站点
+        function deleteObj(obj) {
+            swal({
+                title:"您确定删除"+obj.name+"站点吗？",
+                text:"谨慎操作！站点信息删除后将无法撤回！",
+                type:"warning",
+                showCancelButton:true,
+                confirmButtonText:"确定删除",
+                confirmButtonColor:"#F27474",
+                cancelButtonText:"取消",
+                closeOnConfirm:false,
+                showLoaderOnConfirm:true
+            },function () {
+                $.ajax({
+                    url: root + "/admin/station/delete",
+                    method: "post",
+                    dataType: "json",
+                    data: {"id": obj.id},
+                    async: true,
+                    success: function (data) {
+                        if (data.code > 0) {
+                            //swal("删除成功！","","success");
+                            swal({
+                                title: "删除成功！",
+                                text: "",
+                                type: "success"
+                            });
+                            //成功之后重新获取列表
+                            initialDataTable();
+                        } else {
+                            //swal("删除失败！",data.msg,"error");
+                            swal({
+                                title: "删除失败！",
+                                text: data.msg,
+                                type: "error"
+                            });
+                        }
+                    }
+                })
+            });
+        }
+
+        //点击新增站点按钮
+        function addStation() {
+            //初始化表单信息
+            $form = $("#form_info");
+            $form.find("[name=id]").val("");
+            $form.find("[name=name]").val("");
+            //弹出模态框
+            $("#modal_info").modal("show");
+        }
+
+        //保存信息
         function saveInfo() {
             //获取表单数据
             var params = {};
             $form = $("#form_info");
-            params["username"] = $form.find("[name=username]").val();
-            params["password"] = $form.find("[name=password]").val();
             params["id"] = $form.find("[name=id]").val();
-            if (params.username == ""){
-                toastr.warning("提示：请输入管理员名称！");
-                return;
-            }
-            if (params.password == ""){
-                toastr.warning("提示：请输入管理员密码！");
+            params["name"] = $form.find("[name=name]").val();
+            if (params.name == ""){
+                toastr.warning("提示：请输入站点名称！");
                 return;
             }
             //发送请求保存
             $.ajax({
-                url:root+"/admin/saveAdmin",
+                url:root+"/admin/station/save",
                 method:"post",
                 dataType:"json",
                 async:false,
@@ -136,9 +205,7 @@
                 }
             });
         }
-        function showModal() {
-            $("#modal_info").modal("show");
-        }
+
     </script>
 </body>
 </html>

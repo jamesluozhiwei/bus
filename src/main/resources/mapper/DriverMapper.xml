@@ -111,7 +111,7 @@
       #{age,jdbcType=INTEGER}, #{head,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{state,jdbcType=INTEGER}, #{lastBus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.whx.bus.entity.Driver" >
+  <insert id="insertSelective" parameterType="com.whx.bus.entity.Driver" useGeneratedKeys="true" keyProperty="id" >
     insert into driver
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

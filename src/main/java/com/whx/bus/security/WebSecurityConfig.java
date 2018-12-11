@@ -35,12 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService());
-        auth.inMemoryAuthentication().passwordEncoder(passwordEncoder()).withUser("James").password("123456").roles("ADMIN");
+        //auth.inMemoryAuthentication().passwordEncoder(passwordEncoder()).withUser("James").password("123456").roles("ADMIN");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").and().formLogin().loginPage("/login").failureUrl("/login?error").permitAll()
+        http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").and().formLogin().loginPage("/login").failureUrl("/login?error").defaultSuccessUrl("/admin/driver/list").permitAll()
                 .and().logout().logoutSuccessUrl("/login?logout").permitAll();
         http.csrf().disable();
         /*http.authorizeRequests()
