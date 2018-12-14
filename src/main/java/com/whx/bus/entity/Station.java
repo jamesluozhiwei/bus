@@ -1,6 +1,11 @@
 package com.whx.bus.entity;
 
-public class Station {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
+
+@JsonIgnoreProperties
+public class Station implements Serializable {
     private Integer id;
 
     private String name;

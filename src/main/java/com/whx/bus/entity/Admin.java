@@ -1,9 +1,11 @@
 package com.whx.bus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +14,8 @@ import java.util.List;
  * 管理员实体类
  * 使用security需实现UserDetails接口
  */
-public class Admin implements UserDetails {
+@JsonIgnoreProperties
+public class Admin implements UserDetails, Serializable {
     private Integer id;
 
     private String username;

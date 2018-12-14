@@ -1,8 +1,12 @@
 package com.whx.bus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Bus {
+@JsonIgnoreProperties
+public class Bus implements Serializable {
     private Integer id;
 
     private String card;

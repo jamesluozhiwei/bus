@@ -1,6 +1,11 @@
 package com.whx.bus.entity;
 
-public class Driver {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
+
+@JsonIgnoreProperties
+public class Driver implements Serializable {
     private Integer id;
 
     private String name;

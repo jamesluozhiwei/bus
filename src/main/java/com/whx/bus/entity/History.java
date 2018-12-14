@@ -1,8 +1,11 @@
 package com.whx.bus.entity;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public class History {
+import java.io.Serializable;
+import java.util.Date;
+@JsonIgnoreProperties
+public class History implements Serializable {
     private Integer id;
 
     private Integer busid;

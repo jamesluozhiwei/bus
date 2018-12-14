@@ -1,10 +1,13 @@
 package com.whx.bus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-public class Way {
+@JsonIgnoreProperties
+public class Way implements Serializable {
     private Integer id;
 
     private String name;
