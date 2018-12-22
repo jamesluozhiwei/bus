@@ -62,18 +62,20 @@
         });
         //初始化datatable
         function initialDataTable() {
+            //先发送一个获取所有站点数据的请求
             $.ajax({
-                url:root+"/admin/station/datatable",
-                method:"post",
-                dataType:"json",
-                async:true,
-                data:{},
-                success:function (data) {
+                url:root+"/admin/station/datatable",//请求地址
+                method:"post",//请求方式
+                dataType:"json",//期待的数据响应类型
+                async:true,//是否是异步请求
+                data:{},//传递给后台的参数
+                success:function (data) {//服务器相应成功之后执行的回调函数
                     //初始化datatable
                     if (typeof oTable != "undefined"){
                         //如果已经被实例化，则销毁再实例化
                         oTable.fnDestroy();
                     }
+                    //执行实例化dataTable
                     oTable = $("#infoTable").dataTable({
                         "bPaginate":true,//翻页功能
                         "sServerMethod":"POST",//请求方式

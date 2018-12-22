@@ -30,8 +30,8 @@
     <script>
         L2Dwidget.init({
             pluginRootPath:"vendor/live2dw/",
-            pluginJsPath:"vendor/lib/",
-            pluginModelPath:"vendor/assets/",
+            pluginJsPath:"lib/",
+            pluginModelPath:"assets/",
             tagMode:!1,
             debug:!1,
             model:{
@@ -39,10 +39,11 @@
                 jsonPath:"/vendor/live2dw/assets/asuna_33.model.json"
             },
             display:{
-                position:"left",
-                width:130,
-                height:250,
-                hOffset:-40
+                position:"left",//定位位置
+                width:130,//宽度
+                height:250,//高度
+                hOffset:-40,//左右
+                vOffset:-20//上下
             },
             mobile:{
                 show:!1

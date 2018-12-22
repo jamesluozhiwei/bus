@@ -113,7 +113,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from bus
     where id = #{id,jdbcType=INTEGER}
@@ -129,11 +129,11 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.whx.bus.entity.Bus" >
-    insert into bus (id, card, driverId, 
-      wayId, price, topen, 
+    insert into bus (id, card, driverId,
+      wayId, price, topen,
       tclose)
-    values (#{id,jdbcType=INTEGER}, #{card,jdbcType=VARCHAR}, #{driverid,jdbcType=INTEGER}, 
-      #{wayid,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{topen,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{card,jdbcType=VARCHAR}, #{driverid,jdbcType=INTEGER},
+      #{wayid,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{topen,jdbcType=TIMESTAMP},
       #{tclose,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.whx.bus.entity.Bus" >
